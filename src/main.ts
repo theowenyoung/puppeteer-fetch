@@ -2,6 +2,7 @@ import * as puppeteer from 'puppeteer';
 import Handlebars from 'handlebars';
 import { IOptions, IResponse } from './interface';
 import { getFixContent } from './util';
+export * from './interface';
 let globalBrowser: puppeteer.Browser;
 let globalReject: (e: Error) => void;
 const fetch = async (
