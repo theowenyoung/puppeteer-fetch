@@ -130,13 +130,10 @@ const fetch = async (
                 fetchUrl: url,
                 fetchConfig: config ? JSON.stringify(config, null, 2) : '{}',
               });
-              page
-                .setContent(htmlContent, {
-                  timeout: timeout,
-                  waitUntil: 'networkidle2',
-                  ...puppeteerConfig.waitFor,
-                })
-                .catch((e) => rejectFinally(e));
+              await page.setContent(htmlContent, {
+                timeout: timeout,
+                ...puppeteerConfig.waitFor,
+              });
             } catch (error) {
               rejectFinally(error);
             }
