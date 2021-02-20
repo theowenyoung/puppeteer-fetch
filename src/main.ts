@@ -40,36 +40,54 @@ const fetch = async (
       .then((browser) => {
         globalBrowser = browser;
         const timer: NodeJS.Timeout = setTimeout(() => {
-          browser
-            .close()
-            .then(() => {
-              reject(new Error(`Timeout ${timeout}ms`));
-            })
-            .catch((e) => {
-              reject(new Error(`Timeout ${timeout}ms with broser error: ${e}`));
-            });
+          const alive = browser && browser.isConnected();
+
+          if (alive) {
+            browser
+              .close()
+              .then(() => {
+                reject(new Error(`Timeout ${timeout}ms`));
+              })
+              .catch((e) => {
+                reject(
+                  new Error(`Timeout ${timeout}ms with broser error: ${e}`),
+                );
+              });
+          } else {
+            reject(new Error(`Timeout ${timeout}ms`));
+          }
         }, timeout);
         const rejectFinally = (e) => {
           if (timer) {
             clearTimeout(timer);
           }
-          browser
-            .close()
-            .then(() => {
-              reject(e);
-            })
-            .catch((e) => reject(e));
+          const alive = browser && browser.isConnected();
+          if (alive) {
+            browser
+              .close()
+              .then(() => {
+                reject(e);
+              })
+              .catch((e) => reject(e));
+          } else {
+            reject(e);
+          }
         };
         const resolveFinally = (e: IResponse): void => {
           if (timer) {
             clearTimeout(timer);
           }
-          browser
-            .close()
-            .then(() => {
-              resolve(e);
-            })
-            .catch(() => resolve(e));
+          const alive = browser && browser.isConnected();
+          if (alive) {
+            browser
+              .close()
+              .then(() => {
+                resolve(e);
+              })
+              .catch(() => resolve(e));
+          } else {
+            resolve(e);
+          }
         };
 
         browser
