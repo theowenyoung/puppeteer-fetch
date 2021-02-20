@@ -47,7 +47,7 @@
     "lint": "eslint . --ext .ts,.tsx",
     "test": "jest --coverage",
     "test:watch": "jest --watch",
-    "release": "release-it"
+    "release": "yarn build && release-it"
   },
   "author": "Owen Young <theowenyoung@gmail.com>",
   "license": "Apache-2.0",

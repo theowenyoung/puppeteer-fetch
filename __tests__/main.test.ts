@@ -22,6 +22,10 @@ describe('fetch request', () => {
       ),
     );
   }, 20000);
+  test('request with root path', async () => {
+    const response = await fetch('https://jsonplaceholder.typicode.com');
+    expect(response.ok).toBe(true);
+  }, 20000);
   test('request with 404', async () => {
     const response = await fetch(
       'https://jsonplaceholder.typicode.com/posts1111111',

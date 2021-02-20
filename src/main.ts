@@ -115,6 +115,11 @@ const fetch = async (
               });
               page.on('response', async (response) => {
                 const responseUrl = response.url();
+                // fix url ,if url do not have slash /
+                const urlObj = new URL(url);
+                if (urlObj.pathname === '/' && !url.endsWith('/')) {
+                  url += '/';
+                }
                 if (responseUrl === url) {
                   const text = await response.text();
                   const request = response.request();
