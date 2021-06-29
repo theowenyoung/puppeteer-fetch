@@ -17,10 +17,12 @@
     "noImplicitAny": false,
     "noImplicitThis": false,
     "strictNullChecks": false,
-    "declaration":true
+    "declaration": true,
+    "esModuleInterop": true
   },
   "include": [
     "src/**/*",
-    "__tests__/**/*"
-, "__tests__"  ]
+    "__tests__/**/*",
+    "__tests__"
+  ]
 }

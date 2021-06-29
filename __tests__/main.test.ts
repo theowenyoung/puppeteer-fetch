@@ -1,9 +1,39 @@
 import fetch from '../src/main';
+import  puppeteer from 'puppeteer-extra';
+import StealthPlugin from 'puppeteer-extra-plugin-stealth'
+import puppeteerLib from 'puppeteer'
+console.log('StealthPlugin',StealthPlugin);
 
 describe('fetch request', () => {
   test('request', async () => {
     const response = await fetch(
       'https://jsonplaceholder.typicode.com/todos/1',
+    );
+    expect(response.ok).toBe(true);
+    const result = (await response.json()) as { id: number };
+    expect(result.id).toBe(1);
+    const textResult = (await response.text()) as string;
+    expect(textResult).toBe(
+      JSON.stringify(
+        {
+          userId: 1,
+          id: 1,
+          title: 'delectus aut autem',
+          completed: false,
+        },
+        null,
+        2,
+      ),
+    );
+  }, 20000);
+
+  test('request with puppeteer instant', async () => {
+    // add stealth plugin and use defaults (all evasion techniques)
+    puppeteer.use(StealthPlugin())
+    const response = await fetch(
+      'https://jsonplaceholder.typicode.com/todos/1',null,{
+        puppeteer:puppeteer as unknown as  puppeteerLib.PuppeteerNode
+      }
     );
     expect(response.ok).toBe(true);
     const result = (await response.json()) as { id: number };

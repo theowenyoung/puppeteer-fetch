@@ -1,11 +1,12 @@
-import {
-  LaunchOptions,
-  ChromeArgOptions,
-  BrowserOptions,
-  WaitForOptions,
-} from 'puppeteer';
+import puppeteer from 'puppeteer';
+
+export type Product = 'chrome' | 'firefox';
+
 export interface IPuppeteerConfig {
-  launchOptions?: LaunchOptions & ChromeArgOptions & BrowserOptions;
+  launchOptions?: puppeteer.LaunchOptions & puppeteer.BrowserLaunchArgumentOptions & puppeteer.BrowserConnectOptions & {
+    product?: Product;
+    extraPrefsFirefox?: Record<string, unknown>;
+}
   userAgent?: string;
   viewPort?: {
     width: number;
@@ -15,12 +16,13 @@ export interface IPuppeteerConfig {
     isLandscape?: boolean;
     hasTouch?: boolean;
   };
-  waitFor?: WaitForOptions;
+  waitFor?: puppeteer.WaitForOptions;
   extraHTTPHeaders?: Record<string, string>;
 }
 export interface IOptions {
   puppeteerConfig?: IPuppeteerConfig;
   timeout?: number;
+  puppeteer?:puppeteer.PuppeteerNode
 }
 export interface IRequest {
   method: string;
@@ -29,7 +31,7 @@ export interface IRequest {
   body?: string;
 }
 export interface IResponse {
-  readonly headers: Headers;
+  readonly headers:  Record<string, string>;
   readonly ok: boolean;
   readonly status: number;
   readonly statusText: string;

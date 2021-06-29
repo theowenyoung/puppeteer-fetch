@@ -1,9 +1,9 @@
-import * as puppeteer from 'puppeteer';
+import  puppeteerLib from 'puppeteer';
 import Handlebars from 'handlebars';
 import { IOptions, IResponse } from './interface';
 import { getFixContent } from './util';
 export * from './interface';
-let globalBrowser: puppeteer.Browser;
+let globalBrowser: puppeteerLib.Browser;
 let globalReject: (e: Error) => void;
 const fetch = async (
   url: string,
@@ -25,7 +25,7 @@ const fetch = async (
   }
   const puppeteerConfig = options.puppeteerConfig || {};
   const timeout = options.timeout || 60000;
-
+  const puppeteer = options.puppeteer || puppeteerLib;
   return new Promise((resolve, reject) => {
     globalReject = reject;
     const userAgent = puppeteerConfig.userAgent;
