@@ -51,7 +51,10 @@ const fetch = require('puppeteer-fetch');
 fetch('<url>', fetchOptions, {
   puppeteerConfig: IPuppeteerConfig,
   timeout: number,
+  puppeteer: PuppeteerNode
 });
+
+// you can pass a puppeteer instant, like puppeteer-extra
 
 interface IPuppeteerConfig {
   launchOptions?: LaunchOptions & ChromeArgOptions & BrowserOptions;
