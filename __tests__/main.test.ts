@@ -1,8 +1,7 @@
 import fetch from '../src/main';
-import  puppeteer from 'puppeteer-extra';
-import StealthPlugin from 'puppeteer-extra-plugin-stealth'
-import puppeteerLib from 'puppeteer'
-console.log('StealthPlugin',StealthPlugin);
+import puppeteer from 'puppeteer-extra';
+import StealthPlugin from 'puppeteer-extra-plugin-stealth';
+import puppeteerLib from 'puppeteer';
 
 describe('fetch request', () => {
   test('request', async () => {
@@ -29,11 +28,13 @@ describe('fetch request', () => {
 
   test('request with puppeteer instant', async () => {
     // add stealth plugin and use defaults (all evasion techniques)
-    puppeteer.use(StealthPlugin())
+    puppeteer.use(StealthPlugin());
     const response = await fetch(
-      'https://jsonplaceholder.typicode.com/todos/1',null,{
-        puppeteer:puppeteer as unknown as  puppeteerLib.PuppeteerNode
-      }
+      'https://jsonplaceholder.typicode.com/todos/1',
+      null,
+      {
+        puppeteer: (puppeteer as unknown) as puppeteerLib.PuppeteerNode,
+      },
     );
     expect(response.ok).toBe(true);
     const result = (await response.json()) as { id: number };
@@ -63,6 +64,15 @@ describe('fetch request', () => {
     expect(response.ok).toBe(false);
     expect(response.status).toBe(404);
   }, 20000);
+  test('request with 301', async () => {
+    const response = await fetch('http://testhtml5.vulnweb.com/login', {
+      method: 'POST',
+      body: 'username=admin&password=',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    });
+    expect(response.ok).toBe(false);
+    expect(response.status).toBe(302);
+  }, 20000);
   test('request with error', async () => {
     await expect(fetch('1341')).rejects.toThrow(Error);
   }, 20000);
@@ -81,6 +91,7 @@ describe('fetch request', () => {
         'Content-type': 'application/json; charset=UTF-8',
       },
     });
+
     expect(response.ok).toBe(true);
     const result = (await response.json()) as { id: number };
 

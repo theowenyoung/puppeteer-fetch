@@ -1,4 +1,4 @@
-import  puppeteerLib from 'puppeteer';
+import puppeteerLib from 'puppeteer';
 import Handlebars from 'handlebars';
 import { IOptions, IResponse } from './interface';
 import { getFixContent } from './util';
@@ -78,13 +78,16 @@ const fetch = async (
             clearTimeout(timer);
           }
           const alive = browser && browser.isConnected();
+
           if (alive) {
             browser
               .close()
               .then(() => {
                 resolve(e);
               })
-              .catch(() => resolve(e));
+              .catch(() => {
+                resolve(e);
+              });
           } else {
             resolve(e);
           }
@@ -121,7 +124,22 @@ const fetch = async (
                   url += '/';
                 }
                 if (responseUrl === url) {
-                  const text = await response.text();
+                  // response will be destroyed when page close
+                  let _text = null;
+                  let _text_catch = null;
+                  try {
+                    _text = await response.text();
+                  } catch (error) {
+                    _text_catch = error;
+                  }
+                  let _json = null;
+                  let _json_catch = null;
+                  try {
+                    _json = await response.json();
+                  } catch (error) {
+                    _json_catch = error;
+                  }
+
                   const request = response.request();
 
                   const newIResponse: IResponse = {
@@ -131,10 +149,18 @@ const fetch = async (
                     statusText: response.statusText(),
                     url: response.url(),
                     json: async () => {
-                      return JSON.parse(text);
+                      if (_json_catch) {
+                        throw _json_catch;
+                      } else {
+                        return _json;
+                      }
                     },
                     text: async () => {
-                      return text;
+                      if (_text_catch) {
+                        throw _text_catch;
+                      } else {
+                        return _text;
+                      }
                     },
                     _request: {
                       headers: request.headers(),
