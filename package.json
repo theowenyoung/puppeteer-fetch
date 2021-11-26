@@ -1,6 +1,6 @@
 {
   "name": "puppeteer-fetch",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Fetch with Puppeteer, just like node-fetch, but use puppeteer as the driver",
   "engines": {
     "node": ">= 14.15 <15"
